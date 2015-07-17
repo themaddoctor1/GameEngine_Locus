@@ -6,7 +6,7 @@
 
 package gui;
 
-import gui.shapes.CurvedPolygon;
+import gui.shapes.Polygon3D;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

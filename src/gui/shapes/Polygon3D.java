@@ -15,16 +15,20 @@ import gui.Camera;
  *
  * @author Christopher Hittner
  */
-public class CurvedPolygon {
+public class Polygon3D implements Shape3D{
     
     private Coordinate[] coords;
     private int divisions;
     
-    public CurvedPolygon(Coordinate[] c, int divides){
+    public Polygon3D(Coordinate[] c, int divides){
         coords = c;
         divisions = divides;
     }
     
+    
+    public boolean contains(Camera c, int x, int y){
+        return convert(c).contains(x, y);
+    }
     
     public Polygon convert(Camera cam){
         
@@ -39,9 +43,9 @@ public class CurvedPolygon {
             Coordinate finish = coords[(c+1)%coords.length];
             
             Coordinate a = new Coordinate(
-                      start.X() + (finish.X() - start.X())*i/(divisions)
-                    , start.Y() + (finish.Y() - start.Y())*i/(divisions)
-                    , start.Z() + (finish.Z() - start.Z())*i/(divisions)
+                      start.X() + (finish.X() - start.X())*d/(divisions)
+                    , start.Y() + (finish.Y() - start.Y())*d/(divisions)
+                    , start.Z() + (finish.Z() - start.Z())*d/(divisions)
             );
             
             int[] pos = cam.getPlanarCoordinate(a);
@@ -56,30 +60,18 @@ public class CurvedPolygon {
         return result;
     }
     
-    
-    public void drawPolygon(Graphics g, Camera c){
-        for(int i = 0; i < coords.length; i++)
-            drawCurvedLine(g, c, divisions, coords[i], coords[(i+1)%coords.length]);
+    @Override
+    public void drawShape(Graphics g, Camera c){
+        
+        ((Graphics2D) g).drawPolygon(convert(c));
         
     }
     
-    public void fillPolygon(Graphics g, Camera c){
+    @Override
+    public void fillShape(Graphics g, Camera c){
         Graphics2D g2 = (Graphics2D) g;
         
-        ArrayList<Coordinate> coordinates = getDrawnCoordinates();
-        
-        Coordinate control = coordinates.get(0);
-        
-        for(int i = 0; i < coordinates.size(); i++){
-            int[]   aCoord = c.getPlanarCoordinate(control)
-                  , bCoord = c.getPlanarCoordinate(coordinates.get(i))
-                  , cCoord = c.getPlanarCoordinate(coordinates.get((i+1)%coordinates.size()));
-            int[]   xpts = {aCoord[0], bCoord[0], cCoord[0]}
-                    , ypts = {aCoord[1], bCoord[1], cCoord[1]};
-            
-            g2.fillPolygon(new Polygon(xpts,ypts,3));
-            
-        }
+        ((Graphics2D) g).fillPolygon(convert(c));
         
     }
     
