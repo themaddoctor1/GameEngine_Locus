@@ -120,8 +120,16 @@ public class Vector {
         return (a.getMagnitudeX() * b.getMagnitudeX() + a.getMagnitudeY() * b.getMagnitudeY() + a.getMagnitudeZ() * b.getMagnitudeZ());
     }
     
+    public static Vector crossProduct(Vector a, Vector b) {
+        double X = a.getMagnitudeY() * b.getMagnitudeZ() - a.getMagnitudeZ() * b.getMagnitudeY();
+        double Y = - a.getMagnitudeX() * b.getMagnitudeZ() + a.getMagnitudeZ() * b.getMagnitudeX();
+        double Z = a.getMagnitudeX() * b.getMagnitudeY() - a.getMagnitudeY() * b.getMagnitudeX();
+        
+        return new Vector(X, Y, Z);
+    }
+    
     public static double cosOfAngleBetween(Vector a, Vector b){
-        return dotProduct(a,b)/(a.magnitude * b.magnitude);
+        return dotProduct(a,b)/(a.getMagnitude() * b.getMagnitude());
     }
     
 }
